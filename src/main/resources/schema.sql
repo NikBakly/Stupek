@@ -18,6 +18,7 @@ create table if not exists courses
     price           real,
     last_update     timestamp not null,
     developer_id    bigint,
+    is_open boolean DEFAULT TRUE,
     CONSTRAINT fk_developer_id_user_id foreign key (developer_id) REFERENCES users (id)
 );
 

@@ -31,6 +31,8 @@ public class Course {
 
     private LocalDateTime lastUpdate;
 
+    private Boolean isOpen;
+
     @ManyToOne
     @JoinColumn(name = "developer_id")
     private User developer;

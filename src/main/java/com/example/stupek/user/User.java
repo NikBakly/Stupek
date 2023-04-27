@@ -1,6 +1,7 @@
 package com.example.stupek.user;
 
 import com.example.stupek.course.Course;
+import com.example.stupek.util.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class User {
 
     private Float balance;
 
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @ManyToMany

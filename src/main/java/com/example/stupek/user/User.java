@@ -10,6 +10,7 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+@Table(name = "users")
 @Entity
 @Getter
 @Setter
@@ -26,13 +27,19 @@ public class User {
 
     private String email;
 
-    private Integer balance;
+    private Float balance;
 
-    @OneToMany
+    private Role role;
+
+    @ManyToMany
+    @JoinTable(
+            name = "users_courses",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"))
     @ToString.Exclude
     Set<Course> courses;
 
-    @OneToMany
+    @OneToMany(mappedBy = "developer")
     @ToString.Exclude
     private Set<Course> developedCourses;
 

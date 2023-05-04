@@ -21,16 +21,22 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "id")
     private String name;
 
+    @Column(name = "description")
     private String description;
 
+    @Column(name = "course_material")
     private String material;
 
+    @Column(name = "price")
     private Float price;
 
+    @Column(name = "last_update")
     private LocalDateTime lastUpdate;
 
+    @Column(name = "is_open", columnDefinition = "boolean default true")
     private Boolean isOpen;
 
     @ManyToOne

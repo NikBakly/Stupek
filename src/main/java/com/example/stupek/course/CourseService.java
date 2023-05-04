@@ -9,7 +9,7 @@ public interface CourseService {
 
     CourseDto findById(Long courseId);
 
-    List<CourseDto> findAll();
+    List<CourseDto> findAll(Integer offset, Integer limit);
 
     void deleteById(Long courseId);
 }

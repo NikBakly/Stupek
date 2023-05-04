@@ -1,7 +1,6 @@
 package com.example.stupek.course;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 

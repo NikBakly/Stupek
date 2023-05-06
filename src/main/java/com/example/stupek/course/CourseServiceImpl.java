@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDateTime;
@@ -21,6 +22,7 @@ public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
 
     @Override
+    @Transactional
     public CourseDto save(@Valid CourseDto courseDto) {
         Course newCourse = courseMapper.toCourse(courseDto);
         courseRepository.save(newCourse);
@@ -29,6 +31,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional
     public CourseDto updateById(Long courseId, @Valid CourseDto updatedCourse) {
         Course foundCourse = getCourseById(courseId);
         if (!foundCourse.getName().equals(updatedCourse.getName())) {
@@ -53,6 +56,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CourseDto findById(Long courseId) {
         Course foundCourse = getCourseById(courseId);
         log.info("Course with id={} was found successfully", courseId);
@@ -60,6 +64,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CourseDto> findAll(Integer offset, Integer limit) {
         List<Course> courses = courseRepository.findAll(
                         PageRequest.of(
@@ -71,6 +76,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional
     public void deleteById(Long courseId) {
         Course foundCourse = getCourseById(courseId);
         courseRepository.delete(foundCourse);

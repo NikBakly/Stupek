@@ -5,5 +5,5 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/admins")
-public class AdminController {
+public class AdminRestController {
 }

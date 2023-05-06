@@ -5,5 +5,5 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/developers")
-public class DeveloperController {
+public class DeveloperRestController {
 }

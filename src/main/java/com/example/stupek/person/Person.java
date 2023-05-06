@@ -38,6 +38,10 @@ public class Person {
     @Column(name = "role")
     private PersonRole personRole;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    PersonStatus personStatus;
+
     @ManyToMany
     @JoinTable(
             name = "users_courses",

@@ -1,12 +1,13 @@
 create table if not exists persons
 (
-    id       bigint primary key,
-    login    varchar not null unique,
-    password varchar not null,
-    email    varchar not null unique,
-    balance  real,
-    role     varchar DEFAULT 'USER',
-    status   varchar DEFAULT 'ACTIVE',
+    id          bigint primary key,
+    login       varchar   not null unique,
+    password    varchar   not null,
+    email       varchar   not null unique,
+    balance     real,
+    role        varchar DEFAULT 'USER',
+    status      varchar DEFAULT 'ACTIVE',
+    last_update timestamp not null,
     CONSTRAINT check_role_value check ( role = 'USER' OR role = 'ADMIN' OR role = 'DEVELOPER'),
     CONSTRAINT check_status_value check (status = 'ACTIVE' OR status = 'BANNED' )
 );

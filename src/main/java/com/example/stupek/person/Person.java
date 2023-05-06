@@ -50,5 +50,6 @@ public class Person {
     @ToString.Exclude
     private Set<Course> developedCourses;
 
+    @Column(name = "last_update")
     private LocalDateTime lastUpdate;
 }

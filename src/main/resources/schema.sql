@@ -1,4 +1,4 @@
-create table if not exists users
+create table if not exists persons
 (
     id       bigint primary key,
     login    varchar not null unique,
@@ -6,7 +6,9 @@ create table if not exists users
     email    varchar not null unique,
     balance  real,
     role     varchar DEFAULT 'USER',
-    CONSTRAINT check_role_value check ( role = 'USER' OR role = 'ADMIN' OR role = 'DEVELOPER')
+    status   varchar DEFAULT 'ACTIVE',
+    CONSTRAINT check_role_value check ( role = 'USER' OR role = 'ADMIN' OR role = 'DEVELOPER'),
+    CONSTRAINT check_status_value check (status = 'ACTIVE' OR status = 'BANNED' )
 );
 
 create table if not exists courses
@@ -19,7 +21,7 @@ create table if not exists courses
     last_update     timestamp not null,
     is_open         boolean DEFAULT TRUE,
     developer_id    bigint,
-    CONSTRAINT fk_developer_id_user_id foreign key (developer_id) REFERENCES users (id)
+    CONSTRAINT fk_developer_id_user_id foreign key (developer_id) REFERENCES persons (id)
 );
 
 create table if not exists users_courses
@@ -27,6 +29,6 @@ create table if not exists users_courses
     user_id   bigint,
     course_id bigint,
     primary key (user_id, course_id),
-    foreign key (user_id) REFERENCES users (id),
+    foreign key (user_id) REFERENCES persons (id),
     foreign key (course_id) REFERENCES courses (id)
 );

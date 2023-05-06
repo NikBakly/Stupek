@@ -1,6 +1,6 @@
 package com.example.stupek.course;
 
-import com.example.stupek.user.User;
+import com.example.stupek.person.Person;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ public class Course {
 
     @ManyToOne
     @JoinColumn(name = "developer_id")
-    private User developer;
+    private Person developer;
 
     @ManyToMany
     @JoinTable(
@@ -50,6 +50,5 @@ public class Course {
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
     )
     @ToString.Exclude
-    private Set<User> students;
-
+    private Set<Person> students;
 }

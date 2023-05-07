@@ -18,10 +18,11 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class Course {
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "id")
+    @Column(name = "name")
     private String name;
 
     @Column(name = "description")
@@ -43,12 +44,7 @@ public class Course {
     @JoinColumn(name = "developer_id")
     private Person developer;
 
-    @ManyToMany
-    @JoinTable(
-            name = "users_courses",
-            joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
-    )
+    @ManyToMany(mappedBy = "userCourses")
     @ToString.Exclude
     private Set<Person> students;
 }

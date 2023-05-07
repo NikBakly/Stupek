@@ -30,6 +30,6 @@ create table if not exists users_courses
     user_id   bigint,
     course_id bigint,
     primary key (user_id, course_id),
-    foreign key (user_id) REFERENCES persons (id),
-    foreign key (course_id) REFERENCES courses (id)
+    foreign key (user_id) REFERENCES persons (id) ON DELETE CASCADE,
+    foreign key (course_id) REFERENCES courses (id) ON DELETE CASCADE
 );

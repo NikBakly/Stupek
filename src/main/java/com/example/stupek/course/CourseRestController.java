@@ -27,7 +27,8 @@ public class CourseRestController {
     }
 
     @GetMapping
-    public List<CourseDto> findAll(@RequestParam("offset") Integer offset, @RequestParam("limit") Integer limit) {
+    public List<CourseDto> findAll(@RequestParam(value = "offset", defaultValue = "0") Integer offset,
+                                   @RequestParam(value = "limit", defaultValue = "5") Integer limit) {
         return courseService.findAll(offset, limit);
     }
 

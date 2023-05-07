@@ -2,6 +2,7 @@ package com.example.stupek.person;
 
 import com.example.stupek.exception.NotFoundException;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -32,7 +33,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     @Transactional
-    public PersonViewDto updateById(Long personId, PersonDto updatedPerson) {
+    public PersonViewDto updateById(@Min(1) Long personId, @Valid PersonDto updatedPerson) {
         Person foundPerson = getPersonById(personId);
         if (!foundPerson.getLogin().equals(updatedPerson.getLogin())) {
             foundPerson.setLogin(updatedPerson.getLogin());
@@ -55,10 +56,9 @@ public class PersonServiceImpl implements PersonService {
         return personMapper.toPersonViewDto(foundPerson);
     }
 
-
     @Override
     @Transactional(readOnly = true)
-    public PersonViewDto findById(Long personId) {
+    public PersonViewDto findById(@Min(1) Long personId) {
         Person foundPerson = getPersonById(personId);
         log.info("Person with id={} was found successfully", personId);
         return personMapper.toPersonViewDto(foundPerson);
@@ -66,7 +66,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<PersonViewDto> findAll(Integer offset, Integer limit) {
+    public List<PersonViewDto> findAll(@Min(0) Integer offset, @Min(1) Integer limit) {
         List<Person> persons = personRepository.findAll(
                         PageRequest.of(offset, limit))
                 .toList();
@@ -76,7 +76,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     @Transactional
-    public void deleteById(Long personId) {
+    public void deleteById(@Min(1) Long personId) {
         Person foundPerson = getPersonById(personId);
         personRepository.delete(foundPerson);
         log.info("Person with id={} was deleted successfully", personId);

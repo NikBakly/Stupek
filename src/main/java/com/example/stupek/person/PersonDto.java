@@ -1,6 +1,7 @@
 package com.example.stupek.person;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -16,6 +17,7 @@ public class PersonDto {
     private String password;
 
     @NotNull
+    @Email
     private String email;
 
     @Min(0)

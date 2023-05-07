@@ -2,6 +2,7 @@ package com.example.stupek.course;
 
 import com.example.stupek.exception.NotFoundException;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -32,7 +33,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional
-    public CourseDto updateById(Long courseId, @Valid CourseDto updatedCourse) {
+    public CourseDto updateById(@Min(1) Long courseId, @Valid CourseDto updatedCourse) {
         Course foundCourse = getCourseById(courseId);
         if (!foundCourse.getName().equals(updatedCourse.getName())) {
             foundCourse.setName(updatedCourse.getName());
@@ -57,7 +58,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional(readOnly = true)
-    public CourseDto findById(Long courseId) {
+    public CourseDto findById(@Min(1) Long courseId) {
         Course foundCourse = getCourseById(courseId);
         log.info("Course with id={} was found successfully", courseId);
         return courseMapper.toCourseDto(foundCourse);
@@ -65,7 +66,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CourseDto> findAll(Integer offset, Integer limit) {
+    public List<CourseDto> findAll(@Min(0) Integer offset, @Min(1) Integer limit) {
         List<Course> courses = courseRepository.findAll(
                         PageRequest.of(
                                 offset,
@@ -77,7 +78,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional
-    public void deleteById(Long courseId) {
+    public void deleteById(@Min(0) Long courseId) {
         Course foundCourse = getCourseById(courseId);
         courseRepository.delete(foundCourse);
         log.info("Course with id={} was deleted successfully", courseId);
@@ -86,9 +87,7 @@ public class CourseServiceImpl implements CourseService {
     private Course getCourseById(Long courseId) {
         return courseRepository
                 .findById(courseId)
-                .orElseThrow(() -> {
-                    log.warn("Course with id={} was not found", courseId);
-                    return new NotFoundException("Course with id=" + courseId + " was not found");
-                });
+                .orElseThrow(() ->
+                        new NotFoundException("Course with id=" + courseId + " was not found"));
     }
 }

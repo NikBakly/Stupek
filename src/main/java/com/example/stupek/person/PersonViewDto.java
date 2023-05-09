@@ -1,6 +1,7 @@
 package com.example.stupek.person;
 
 import com.example.stupek.course.CourseDto;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
@@ -24,6 +25,7 @@ public class PersonViewDto {
 
     private Set<CourseDto> developedCourses;
 
+    @JsonFormat(pattern = "HH:mm:ss|dd.MM.yyyy")
     private LocalDateTime lastUpdate;
 
 }

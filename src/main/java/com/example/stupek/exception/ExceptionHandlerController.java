@@ -3,6 +3,7 @@ package com.example.stupek.exception;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -15,8 +16,8 @@ import java.util.List;
 public class ExceptionHandlerController {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(NotFoundException.class)
-    ApiError handlerNotFoundException(NotFoundException e) {
+    @ExceptionHandler({NotFoundException.class, UsernameNotFoundException.class})
+    ApiError handlerNotFoundException(RuntimeException e) {
         log.warn(e.getMessage());
         return new ApiError(
                 TypeError.NOT_FOUND,

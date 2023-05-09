@@ -1,15 +1,18 @@
 package com.example.stupek.course;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+
 import java.util.List;
 
 public interface CourseService {
-    CourseDto save(CourseDto courseDto);
+    CourseDto save(@Valid CourseDto courseDto);
 
-    CourseDto updateById(Long courseId, CourseDto updatedCourse);
+    CourseDto updateById(@Min(1) Long courseId, @Valid CourseDto updatedCourse);
 
-    CourseDto findById(Long courseId);
+    CourseDto findById(@Min(1) Long courseId);
 
-    List<CourseDto> findAll(Integer offset, Integer limit);
+    List<CourseDto> findAll(@Min(0) Integer offset, @Min(1) Integer limit);
 
-    void deleteById(Long courseId);
+    void deleteById(@Min(1) Long courseId);
 }

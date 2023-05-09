@@ -14,7 +14,7 @@ public class PersonDto {
     private String login;
 
     @NotNull
-    private String password;
+    private char[] password;
 
     @NotNull
     @Email

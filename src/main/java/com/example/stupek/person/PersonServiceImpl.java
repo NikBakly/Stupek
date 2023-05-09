@@ -1,6 +1,7 @@
 package com.example.stupek.person;
 
 import com.example.stupek.exception.NotFoundException;
+import com.example.stupek.utility.EncodePasswordUtil;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -38,8 +39,8 @@ public class PersonServiceImpl implements PersonService {
         if (!foundPerson.getLogin().equals(updatedPerson.getLogin())) {
             foundPerson.setLogin(updatedPerson.getLogin());
         }
-        if (!foundPerson.getPassword().equals(updatedPerson.getPassword())) {
-            foundPerson.setPassword(updatedPerson.getPassword());
+        if (!foundPerson.getPassword().equals(EncodePasswordUtil.getEncodingPassword(updatedPerson.getPassword()))) {
+            foundPerson.setPassword(EncodePasswordUtil.getEncodingPassword(updatedPerson.getPassword()));
         }
         if (!foundPerson.getEmail().equals(updatedPerson.getEmail())) {
             foundPerson.setEmail(updatedPerson.getEmail());

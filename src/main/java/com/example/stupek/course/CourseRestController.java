@@ -8,7 +8,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/course")
+@RequestMapping("/api/courses")
 public class CourseRestController {
     private final CourseService courseService;
 

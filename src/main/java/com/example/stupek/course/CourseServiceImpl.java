@@ -78,7 +78,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional
-    public void deleteById(@Min(0) Long courseId) {
+    public void deleteById(@Min(1) Long courseId) {
         Course foundCourse = getCourseById(courseId);
         courseRepository.delete(foundCourse);
         log.info("Course with id={} was deleted successfully", courseId);

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        Отправляем JSON-данные на сервер
+    </title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+<!-- скрипт, который обработает нажатие на кнопку и отправит данные на сервер -->
+<script>
+    // эта функция сработает при нажатии на кнопку
+    function sendJSON() {
+        // с помощью jQuery обращаемся к элементам на странице по их именам
+        let login = document.querySelector('#login');
+        let password = document.querySelector('#password');
+        let email = document.querySelector('#email');
+        let balance = document.querySelector('#balance')
+        // а вот сюда мы поместим ответ от сервера
+        let result = document.querySelector('.result');
+        // создаём новый экземпляр запроса XHR
+        let xhr = new XMLHttpRequest();
+        // адрес, куда мы отправим нашу JSON-строку
+        let url = "http://localhost:8080/api/persons";
+        // открываем соединение
+        xhr.open("POST", url, true);
+        // устанавливаем заголовок — выбираем тип контента, который отправится на сервер, в нашем случае мы явно пишем, что это JSON
+        xhr.setRequestHeader("Content-Type", "application/json");
+        // когда придёт ответ на наше обращение к серверу, мы его обработаем здесь
+        xhr.onreadystatechange = function () {
+            // если запрос принят и сервер ответил, что всё в порядке
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // выводим то, что ответил нам сервер — так мы убедимся, что данные он получил правильно
+                result.innerHTML = this.responseText;
+            }
+        };
+        // преобразуем наши данные JSON в строку
+        var data = JSON.stringify({
+            "login": login.value,
+            "password": password.value,
+            "email": email.value,
+            "balance": balance.value
+        });
+        // когда всё готово, отправляем JSON на сервер
+        xhr.send(data);
+    }
+</script>
+<body style="text-align:center;" id="body">
+<!-- заголовок -->
+<h1> Простая форма для регистрации </h1>
+<!-- делаем форму с полями ввода -->
+<p>
+    <input type="text" id="login" placeholder="Логин">
+    <input type="text" id="password" placeholder="Пароль">
+    <input type="text" id="email" placeholder="Почта">
+    <input type="number" id="balance" placeholder="Баланс">
+    <!-- по нажатию на эту кнопку данные уйдут на сервер -->
+    <button onclick="sendJSON()">Проверить JSON</button>
+    <!-- а вот тут они появятся снова, но уже после обработки сервером -->
+<p class="result" style="color:green"></p>
+</p>
+<div>
+    <p>Let's go to <a th:href="@{/auth/login}">sing</a></p>
+</div>
+</body>
+</html>

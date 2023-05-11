@@ -13,8 +13,7 @@ public class PersonRestController {
     private final PersonService personService;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('users:read')")
-    public PersonViewDto registration(@RequestBody PersonDto personDto) {
+    public PersonViewDto create(@RequestBody PersonDto personDto) {
         return personService.create(personDto);
     }
 

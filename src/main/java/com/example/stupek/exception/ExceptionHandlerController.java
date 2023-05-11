@@ -2,6 +2,7 @@ package com.example.stupek.exception;
 
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.postgresql.util.PSQLException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -40,6 +41,16 @@ public class ExceptionHandlerController {
         return new ApiError(
                 TypeError.BAD_REQUEST,
                 violations,
+                LocalDateTime.now());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(PSQLException.class)
+    ApiError handlerPSQLException(PSQLException e) {
+        log.warn(e.getMessage());
+        return new ApiError(
+                TypeError.BAD_REQUEST,
+                List.of(new Violation(null, e.getMessage())),
                 LocalDateTime.now());
     }
 }

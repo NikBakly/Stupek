@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en ru" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="top_panel">
+    <div id="service_name"><a style="text-decoration: none" href="/"><h1>Stupek</h1></a></div>
+    <div id="login_or_logout">
+        <div sec:authorize="isAnonymous()">
+            <form action="/login">
+                <button type="submit">Войти</button>
+            </form>
+        </div>
+        <div sec:authorize="isAuthenticated()">
+            <div id="logout">
+                <form action="/logout" method="POST">
+                    <button type="submit">Выйти</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="course">
+        <a href="/courses">Курсы</a>
+    </div>
+</div>
+
+
+<div id="main_panel" sec:authorize="hasAnyAuthority('admins:write', 'developers:write')">
+    <div id="edit_user" sec:authorize="hasAuthority('admins:write')">
+        Панель для редактирования пользователя (удалить, заблокировать, разблокировать)
+    </div>
+    <div id="edit_course" sec:authorize="hasAuthority('developers:write')">
+        Панель для редактирования своих курсов (удалить, закрыть, открыть)
+    </div>
+</div>
+
+</body>
+</html>

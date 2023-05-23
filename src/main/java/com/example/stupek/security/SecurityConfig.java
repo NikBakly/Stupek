@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -24,19 +25,26 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf().disable()
-                .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/registration", "/", "/home", "/api/persons", "/auth/login").permitAll()
-                        .anyRequest().authenticated())
+                .authorizeHttpRequests((request) -> request
+                        .requestMatchers(
+                                "/",
+                                "/registration",
+                                "/courses",
+                                "/api/persons",
+                                "/login",
+                                "/static/**").permitAll()
+                        .anyRequest().authenticated()
+                )
                 .formLogin((form) -> form
-                        .loginPage("/auth/login")
+                        .loginPage("/login")
                         .permitAll())
                 .logout((logout) -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout", "POST"))
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
                         .deleteCookies("JSESSIONID")
-                        .logoutSuccessUrl("/auth/login"))
+                        .logoutSuccessUrl("/"))
+                .csrf().disable()
                 .build();
     }
 
@@ -51,6 +59,11 @@ public class SecurityConfig {
     @Bean
     protected PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    protected AuthenticationPrincipalArgumentResolver authenticationPrincipalArgumentResolver() {
+        return new AuthenticationPrincipalArgumentResolver();
     }
 
 }

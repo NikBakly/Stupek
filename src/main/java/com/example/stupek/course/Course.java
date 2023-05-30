@@ -8,7 +8,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Table(name = "courses")
 @Entity
@@ -31,9 +30,6 @@ public class Course {
     @Column(name = "course_material")
     private String material;
 
-    @Column(name = "price")
-    private Float price;
-
     @Column(name = "last_update")
     private LocalDateTime lastUpdate;
 
@@ -43,8 +39,4 @@ public class Course {
     @ManyToOne
     @JoinColumn(name = "developer_id")
     private Person developer;
-
-    @ManyToMany(mappedBy = "userCourses")
-    @ToString.Exclude
-    private Set<Person> students;
 }

@@ -42,14 +42,6 @@ public class Person {
     @Column(name = "status")
     PersonStatus personStatus;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "users_courses",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id"))
-    @ToString.Exclude
-    private Set<Course> userCourses;
-
     @OneToMany(mappedBy = "developer")
     @ToString.Exclude
     private Set<Course> developedCourses;

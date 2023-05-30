@@ -3,6 +3,7 @@ package com.example.stupek.person;
 import com.example.stupek.exception.NotFoundException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import java.nio.CharBuffer;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,7 +25,6 @@ public class PersonServiceImpl implements PersonService {
     private final PersonRepository personRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Override
     @Transactional
     public PersonViewDto create(@Valid PersonDto personDto) {
         Person newPerson = personMapper.toPerson(personDto);
@@ -36,21 +35,14 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     @Transactional
-    public PersonViewDto updateById(@Min(1) Long personId, @Valid PersonDto updatedPerson) {
+    public PersonViewDto updateById(@Min(1) Long personId, @Valid PersonDtoForUpdate updatedPerson) {
         Person foundPerson = getPersonById(personId);
-        if (!foundPerson.getLogin().equals(updatedPerson.getLogin())) {
-            foundPerson.setLogin(updatedPerson.getLogin());
-        }
-        if (!passwordEncoder.matches(CharBuffer.wrap(updatedPerson.getPassword()), foundPerson.getPassword())) {
-            foundPerson.setPassword(passwordEncoder.encode(CharBuffer.wrap(updatedPerson.getPassword())));
-        }
-        if (!foundPerson.getEmail().equals(updatedPerson.getEmail())) {
+        if (!updatedPerson.getEmail().isBlank()
+                && !foundPerson.getEmail().equals(updatedPerson.getEmail())) {
             foundPerson.setEmail(updatedPerson.getEmail());
         }
-        if (!foundPerson.getBalance().equals(updatedPerson.getBalance())) {
-            foundPerson.setBalance(updatedPerson.getBalance());
-        }
-        if (!foundPerson.getPersonRole().equals(updatedPerson.getPersonRole())) {
+        if (updatedPerson.getPersonRole() != null
+                && !foundPerson.getPersonRole().equals(updatedPerson.getPersonRole())) {
             foundPerson.setPersonRole(updatedPerson.getPersonRole());
         }
         foundPerson.setLastUpdate(LocalDateTime.now());
@@ -61,9 +53,9 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     @Transactional(readOnly = true)
-    public PersonViewDto findById(@Min(1) Long personId) {
-        Person foundPerson = getPersonById(personId);
-        log.info("Person with id={} was found successfully", personId);
+    public PersonViewDto findByLogin(@NotBlank String personLogin) {
+        Person foundPerson = getPersonById(personLogin);
+        log.info("Person with login='{}' was found successfully", personLogin);
         return personMapper.toPersonViewDto(foundPerson);
     }
 
@@ -88,9 +80,12 @@ public class PersonServiceImpl implements PersonService {
     private Person getPersonById(Long personId) {
         return personRepository
                 .findById(personId)
-                .orElseThrow(() -> {
-                    log.warn("Person with id={} was not found", personId);
-                    return new NotFoundException("Person with id=" + personId + " was not found");
-                });
+                .orElseThrow(() -> new NotFoundException("Person with id=" + personId + " was not found"));
+    }
+
+    private Person getPersonById(String personLogin) {
+        return personRepository
+                .findPersonByLogin(personLogin)
+                .orElseThrow(() -> new NotFoundException("Person with login='" + personLogin + "' was not found"));
     }
 }

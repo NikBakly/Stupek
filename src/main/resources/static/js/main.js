@@ -1,6 +1,8 @@
-let nameHost = "http://localhost:8080/";
-let apiPerson = "api/persons"
-let apiCourse = "api/courses"
+// import {courseApi, personApi, hostName} from './moduleInfo'
+const hostName = "http://localhost:8080/";
+const personApi = hostName + "api/persons"
+const courseApi = hostName + "api/courses"
+
 
 function registration_person() {
     // с помощью jQuery обращаемся к элементам на странице по их именам
@@ -18,7 +20,7 @@ function registration_person() {
     // создаём новый экземпляр запроса XHR
     let xhr = new XMLHttpRequest();
     // адрес, куда мы отправим нашу JSON-строку
-    let url = nameHost + apiPerson
+    let url = personApi
     // преобразуем наши данные JSON в строку
     const data = JSON.stringify({
         "login": login.value,
@@ -36,7 +38,7 @@ function create_course() {
     let courseStatus = !!document.getElementById("open_course").checked
     let result = document.querySelector('.result');
     let xhr = new XMLHttpRequest();
-    let url = nameHost + apiCourse;
+    let url = courseApi;
     const data = JSON.stringify({
         "name": courseName.value,
         "description": courseDescription.value,
@@ -62,3 +64,5 @@ function send_json(xhr, url, result, data) {
     // когда всё готово, отправляем JSON на сервер
     xhr.send(data);
 }
+
+

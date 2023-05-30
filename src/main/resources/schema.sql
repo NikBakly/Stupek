@@ -19,19 +19,9 @@ create table if not exists courses
     name            varchar                                 not null,
     description     varchar,
     course_material varchar                                 not null,
-    price           real,
     last_update     timestamp                               not null,
     is_open         boolean DEFAULT TRUE,
-    developer_id    bigint,
+    developer_id    bigint                                  not null,
     CONSTRAINT pk_course PRIMARY KEY (id),
     CONSTRAINT fk_developer_id_user_id foreign key (developer_id) REFERENCES persons (id)
-);
-
-create table if not exists users_courses
-(
-    user_id   bigint,
-    course_id bigint,
-    primary key (user_id, course_id),
-    foreign key (user_id) REFERENCES persons (id) ON DELETE CASCADE,
-    foreign key (course_id) REFERENCES courses (id) ON DELETE CASCADE
 );

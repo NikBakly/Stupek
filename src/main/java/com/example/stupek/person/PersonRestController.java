@@ -2,6 +2,8 @@ package com.example.stupek.person;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,26 +21,26 @@ public class PersonRestController {
 
     @PatchMapping("/{personId}")
     @PreAuthorize("hasAuthority('users:read')")
-    public PersonViewDto updateById(@PathVariable Long personId, @RequestBody PersonDto personDto) {
-        return personService.updateById(personId, personDto);
-    }
-
-    @GetMapping("/{personId}")
-    @PreAuthorize("hasAuthority('users:read')")
-    public PersonViewDto findPersonById(@PathVariable Long personId) {
-        return personService.findById(personId);
+    public PersonViewDto updateByLogin(@PathVariable Long personId,
+                                       @RequestBody PersonDtoForUpdate updatedPerson) {
+        return personService.updateById(personId, updatedPerson);
     }
 
     @GetMapping
     @PreAuthorize("hasAuthority('users:read')")
+    public PersonViewDto findPersonByLogin(@AuthenticationPrincipal User user) {
+        return personService.findByLogin(user.getUsername());
+    }
+
+    @GetMapping("/all")
     public List<PersonViewDto> findAll(@RequestParam(value = "offset", defaultValue = "0") Integer offset,
-                                       @RequestParam(value = "limit", defaultValue = "5") Integer limit) {
+                                       @RequestParam(value = "limit", defaultValue = "10") Integer limit) {
         return personService.findAll(offset, limit);
     }
 
     @DeleteMapping("/{personId}")
     @PreAuthorize("hasAuthority('admins:write')")
-    public void deletePersonById(@PathVariable Long personId) {
+    public void deletePersonByLogin(@PathVariable Long personId) {
         personService.deleteById(personId);
     }
 }

@@ -1,8 +1,12 @@
 package com.example.stupek.course;
 
 import com.example.stupek.exception.NotFoundException;
+import com.example.stupek.person.Person;
+import com.example.stupek.person.PersonRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -21,15 +25,21 @@ public class CourseServiceImpl implements CourseService {
     private final CourseMapper courseMapper;
     private final CourseListMapper courseListMapper;
     private final CourseRepository courseRepository;
+    private final PersonRepository personRepository;
 
     @Override
     @Transactional
-    public CourseDto save(@Valid CourseDto courseDto) {
+    public CourseDto save(@Valid CourseDto courseDto,
+                          @NotNull(message = "При попытки создания курса логин разработчика равен null")
+                          String developerLogin) {
         Course newCourse = courseMapper.toCourse(courseDto);
+        Person foundPerson = getPersonByLogin(developerLogin);
+        newCourse.setDeveloper(foundPerson);
         courseRepository.save(newCourse);
         log.info("Course with id={} was created successfully", newCourse.getId());
         return courseMapper.toCourseDto(newCourse);
     }
+
 
     @Override
     @Transactional
@@ -43,9 +53,6 @@ public class CourseServiceImpl implements CourseService {
         }
         if (!foundCourse.getMaterial().equals(updatedCourse.getMaterial())) {
             foundCourse.setMaterial(updatedCourse.getMaterial());
-        }
-        if (!foundCourse.getPrice().equals(updatedCourse.getPrice())) {
-            foundCourse.setPrice(updatedCourse.getPrice());
         }
         if (updatedCourse.getIsOpen() != null && !foundCourse.getIsOpen().equals(updatedCourse.getIsOpen())) {
             foundCourse.setIsOpen(updatedCourse.getIsOpen());
@@ -67,13 +74,26 @@ public class CourseServiceImpl implements CourseService {
     @Override
     @Transactional(readOnly = true)
     public List<CourseDto> findAll(@Min(0) Integer offset, @Min(1) Integer limit) {
-        List<Course> courses = courseRepository.findAll(
-                        PageRequest.of(
-                                offset,
-                                limit))
+        List<Course> courses = courseRepository.findAllByIsOpenIsTrue(
+                        PageRequest.of(offset, limit))
                 .toList();
         log.info("Courses was found successfully");
         return courseListMapper.toCourseDtoList(courses);
+    }
+
+    @Override
+    public List<CourseDto> findAllForAdmin() {
+        List<Course> courses = courseRepository.findAll();
+        log.info("Courses for admin was found successfully");
+        return courseListMapper.toCourseDtoList(courses);
+    }
+
+    @Override
+    public List<CourseDto> findDeveloperCourses(@NotBlank String loginDeveloper) {
+        Person developer = getPersonByLogin(loginDeveloper);
+        List<Course> developerCourses = courseRepository.findCourseByDeveloper(developer);
+        log.info("Developer courses was found successfully");
+        return courseListMapper.toCourseDtoList(developerCourses);
     }
 
     @Override
@@ -82,6 +102,11 @@ public class CourseServiceImpl implements CourseService {
         Course foundCourse = getCourseById(courseId);
         courseRepository.delete(foundCourse);
         log.info("Course with id={} was deleted successfully", courseId);
+    }
+
+    private Person getPersonByLogin(String developerLogin) {
+        return personRepository.findPersonByLogin(developerLogin)
+                .orElseThrow(() -> new NotFoundException("Person with login=" + developerLogin + " was not found."));
     }
 
     private Course getCourseById(Long courseId) {

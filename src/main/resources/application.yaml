@@ -4,3 +4,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/stupek
     username: "user"
     password: "pass"
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none

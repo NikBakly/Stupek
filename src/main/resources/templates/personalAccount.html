@@ -2,7 +2,12 @@
 <html lang="en ru" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Личный кабинет</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
 </head>
 <body>
 <div id="top_panel">
@@ -26,15 +31,97 @@
     </div>
 </div>
 
+<div id="main_panel" class="container">
+    <h2>Your info:</h2>
+    <div id="person_info">
 
-<div id="main_panel" sec:authorize="hasAnyAuthority('admins:write', 'developers:write')">
-    <div id="edit_user" sec:authorize="hasAuthority('admins:write')">
-        Панель для редактирования пользователя (удалить, заблокировать, разблокировать)
     </div>
-    <div id="edit_course" sec:authorize="hasAuthority('developers:write')">
-        Панель для редактирования своих курсов (удалить, закрыть, открыть)
+    <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseForPersonInfo" role="button"
+       aria-expanded="false"
+       aria-controls="collapseExample">
+        Update info
+    </a>
+    <div class="collapse" id="collapseForPersonInfo">
+        <label for="email">Email:</label><input type="email" id="email" placeholder="Почта"> <br>
+        <div sec:authorize="!hasAnyAuthority('admins:write', 'developers:write')">
+            <input type="checkbox" id="role_developer" value="DEVELOPER" name="user_role">
+            <label for="role_developer" class="light-gray">Developer</label>
+        </div>
+        <br>
+        <button id="updatePerson" class="btn btn-primary">Обновить</button>
     </div>
+
 </div>
 
+<div id="edit_panel" sec:authorize="hasAnyAuthority('admins:write', 'developers:write')">
+    <div id="edit_courses" sec:authorize="hasAuthority('developers:write')">
+        <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseForDev" role="button" aria-expanded="false"
+           aria-controls="collapseExample">
+            Редактировать свои курсы
+        </a>
+        <div class="collapse" id="collapseForDev">
+            <h4>Панель для редактирования своих курсов (удалить, закрыть, открыть)</h4>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col"> Название</th>
+                    <th scope="col"> Описание</th>
+                    <th scope="col"> Статус</th>
+                    <th scope="col"> Действие</th>
+                </tr>
+                </thead>
+                <tbody id="developer_courses">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="edit_course_and_persons" sec:authorize="hasAuthority('admins:write')">
+        <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseForAdmin" role="button"
+           aria-expanded="false"
+           aria-controls="collapseExample">
+            Редактировать пользователя или курс
+        </a>
+        <div class="collapse" id="collapseForAdmin">
+            <h4>Панель для редактирования пользователя (удалить, заблокировать, разблокировать) и курсов (Открыть,
+                закрыть, Удалить)</h4>
+            <h3>Редактирование пользователей:</h3>
+            <div id="personEdit">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col"> Login</th>
+                        <th scope="col"> Email</th>
+                        <th scope="col"> Role</th>
+                        <th scope="col"> Status</th>
+                        <th scope="col"> LastUpdate</th>
+                        <th scope="col"> Действие</th>
+                    </tr>
+                    </thead>
+                    <tbody id="persons_for_admin">
+
+                    </tbody>
+                </table>
+            </div>
+            <h3>Редактирование курсов:</h3>
+            <div id="courseEdit">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col"> Название</th>
+                        <th scope="col"> Описание</th>
+                        <th scope="col"> Статус</th>
+                        <th scope="col"> Действие</th>
+                    </tr>
+                    </thead>
+                    <tbody id="courses_for_admin">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../static/js/personalAccount.js"></script>
 </body>
 </html>

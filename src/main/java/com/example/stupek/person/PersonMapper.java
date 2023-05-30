@@ -21,6 +21,7 @@ public abstract class PersonMapper {
     @Mapping(target = "balance", defaultExpression = "java(Float.valueOf(0))")
     @Mapping(target = "password", expression = "java(passwordEncoder.encode(CharBuffer.wrap(personDto.getPassword())))")
     @Mapping(target = "lastUpdate", expression = "java(LocalDateTime.now())")
+    @Mapping(target = "id", ignore = true)
     abstract Person toPerson(PersonDto personDto);
 
     abstract PersonViewDto toPersonViewDto(Person person);
